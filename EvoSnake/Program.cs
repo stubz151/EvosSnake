@@ -13,7 +13,7 @@ namespace EvoSnake
         {
            
             ConsoleKey input;
-            SnakeGame snakeyBoi = new SnakeGame(10,10);
+            SnakeGame snakeyBoi = new SnakeGame(20,20);
             snakeyBoi.DisplayBoard();
             snakeyBoi.curDirection = Direction.Right;
             while(snakeyBoi.gameOver==false)
@@ -21,7 +21,7 @@ namespace EvoSnake
                 Direction move = snakeyBoi.curDirection;
                 Stopwatch timer = new Stopwatch();
                 timer.Start();
-                while (timer.Elapsed.TotalSeconds < 1)
+                while (timer.Elapsed.TotalMilliseconds < 100)
                 {
                     if (Console.KeyAvailable)
                     {
@@ -48,6 +48,7 @@ namespace EvoSnake
                                         
                 snakeyBoi.MakeMove(move);
                 snakeyBoi.DisplayBoard();
+               
                            
             }
             Console.WriteLine("Game OVER!!");

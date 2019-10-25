@@ -20,6 +20,7 @@ namespace EvoSnake
     }
     class SnakeGame
     {
+        int[] foodLocation = new int[2]; 
         int score { get; set; }
         public Direction curDirection { get; set; }
         public Boolean gameOver { get; set; } = false;
@@ -108,7 +109,42 @@ namespace EvoSnake
             Console.CursorVisible = false;
             Console.SetCursorPosition(0, 0);
         }
-
+        //This method returns the area around the head,
+        public List<Box> outputBox()
+        {
+            List<Box> outBox = new List<Box>();
+            int[] headPos = snakeBody[0];
+            headPosY = headPos[0];
+            headPosX = headPos[1];
+            Box eleUp = board[headPosY--, headPosX];
+            Box eleDown = board[headPosY++, headPosX];
+            Box eleLeft = board[headPosY, headPosX--];
+            Box eleRight = board[headPosY, headPosX++];
+            Box eleUpLeft = board[headPosY--, headPosX--];
+            Box eleUpRight = board[headPosY--, headPosX++];
+            Box eleDownLeft = board[headPosY++, headPosX--];
+            Box eleDownRight = board[headPosY++, headPosX++];
+            outBox.Add(eleUp);
+            outBox.Add(eleDown);
+            outBox.Add(eleRight);
+            outBox.Add(eleLeft);
+            outBox.Add(eleUpLeft);
+            outBox.Add(eleUpRight);
+            outBox.Add(eleDownLeft);
+            outBox.Add(eleDownRight);
+            return outBox;
+        }
+        public int distanceToFood()
+        {
+            int[] headPos = snakeBody[0];
+            headPosY = headPos[0];
+            headPosX = headPos[1];
+            int distance = 0;
+            distance += Math.Abs(headPosY - foodLocation[0]);
+            distance += Math.Abs(headPosX - foodLocation[1]);
+            return distance;
+             
+        }
         public void genNextFood()
         {
 
@@ -119,6 +155,8 @@ namespace EvoSnake
                 if (board[y, x] == Box.Empty)
                 {
                     board[y, x] = Box.Food;
+                    foodLocation[0] = y;
+                    foodLocation[1] = x;
                     return;
                 }
             }
