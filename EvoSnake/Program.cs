@@ -15,10 +15,9 @@ namespace EvoSnake
             ConsoleKey input;
             SnakeGame snakeyBoi = new SnakeGame(10,10);
             snakeyBoi.DisplayBoard();
-            snakeyBoi.curDirection = Direction.Up;
+            snakeyBoi.curDirection = Direction.Right;
             while(snakeyBoi.gameOver==false)
-            {
-               
+            {              
                 Direction move = snakeyBoi.curDirection;
                 Stopwatch timer = new Stopwatch();
                 timer.Start();
@@ -46,8 +45,7 @@ namespace EvoSnake
                     }                   
                 }
                 timer.Stop();
-             //   Console.Clear();
-
+                                        
                 snakeyBoi.MakeMove(move);
                 snakeyBoi.DisplayBoard();
                            

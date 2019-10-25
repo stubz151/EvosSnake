@@ -17,13 +17,13 @@ namespace EvoSnake
         Wall = 5,
         SnakeBody = 1,
         Food = 2,
-
     }
     class SnakeGame
     {
         int score { get; set; }
         public Direction curDirection { get; set; }
         public Boolean gameOver { get; set; } = false;
+        int[] checkPos { get; set; }
         int headPosX { get; set; }
         int headPosY { get; set; }
         int gridWidth { get; set; }
@@ -84,7 +84,6 @@ namespace EvoSnake
         }
         public void updateBoard()
         {
-
             for (int i = 0; i < snakeBody.Count; i++)
             {
                 int[] pos = snakeBody[i];
@@ -101,7 +100,6 @@ namespace EvoSnake
                     Box b = board[i, j];
                     int ele = (int)b;
                     Console.Write(ele);
-
                 }
             }
             
@@ -137,6 +135,7 @@ namespace EvoSnake
             headPosX = headPos[1];
             int[] tailPos = snakeBody[snakeBody.Count - 1];
             curDirection = move;
+            Boolean eated = false;
             if (move == Direction.Up)
             {
                     int newHeadPosY = headPosY - 1;
@@ -152,11 +151,10 @@ namespace EvoSnake
                         int tailPosX = tailpos[1];
                         board[tailPosY, tailPosX] = Box.Empty;
                         snakeBody.RemoveAt(snakeBody.Count - 1);
-
                             break;
                             
                         case 1:
-                            genNextFood();
+                        eated = true;
                             score++;
                             break;
                         case 2:
@@ -180,7 +178,7 @@ namespace EvoSnake
                         snakeBody.RemoveAt(snakeBody.Count - 1);
                             break;
                         case 1:
-                            genNextFood();
+                        eated = true;
                             score++;
                             break;
                         case 2:
@@ -206,8 +204,8 @@ namespace EvoSnake
                             break;
 
                         case 1:
-                            genNextFood();
-                            score++;
+                        eated = true;
+                        score++;
                             break;
                         case 2:
                             break;
@@ -232,8 +230,8 @@ namespace EvoSnake
                             break;
 
                         case 1:
-                            genNextFood();
-                            score++;
+                        eated = true;
+                        score++;
                             break;
                         case 2:
                             break;
@@ -242,6 +240,10 @@ namespace EvoSnake
             }
             
             updateBoard();
+            if (eated)
+            {
+                genNextFood();
+            }
         }
 
 
@@ -270,15 +272,15 @@ namespace EvoSnake
             }
             for (int i = 1; i< snakeBody.Count-1;i++)
             {              
-                int[] checkPos = snakeBody[i];
+                checkPos = snakeBody[i];
                 int checkPosY = checkPos[0];
                 int checkPosX = checkPos[1];
                 
                 if (x==checkPosX)
                 {
                     if (y==checkPosY)
-                    {
-                     //   gameOver = true;
+                    {                      
+                        gameOver = true;
                         return 2;
                     }                 
                 }
