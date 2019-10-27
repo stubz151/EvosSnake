@@ -9,18 +9,19 @@ namespace EvoSnake
     //Enums are cool classes that contain information on certain variable names, so Direction.Up =0 this is useful as it gives us a way to easily check values.
     enum Direction
     {
-        Up, Right, Down, Left
+        Up,Down,Left,Right
     }
     enum Box
     {
         Empty = 0,
-        Wall = 5,
-        SnakeBody = 1,
-        Food = 2,
+        Wall = 1,
+        SnakeBody = 2,
+        Food = 3, 
+        SnakeHead = 4
     }
-    class SnakeGame
+    class SnakeGame : ICloneable
     {
-        int[] foodLocation = new int[2]; 
+        int[] foodLocation { get; set; } = new int[2];
         int score { get; set; }
         public Direction curDirection { get; set; }
         public Boolean gameOver { get; set; } = false;
@@ -29,9 +30,9 @@ namespace EvoSnake
         int headPosY { get; set; }
         int gridWidth { get; set; }
         int gridHeight { get; set; }
-        private List<int[]> snakeBody = new List<int[]>();
+        public List<int[]> snakeBody { get; set; } = new List<int[]>();
         //Please note its row, columns, so its [y,x] not [x,y]
-        public Box[,] board;
+        public Box[,] board { get; set; }
         Random rnd = new Random();
         public SnakeGame(int gridWidth, int gridHeight)
         {
@@ -43,7 +44,17 @@ namespace EvoSnake
             genSnake();
             genNextFood();
         }
-       
+        public SnakeGame(SnakeGame sg)
+        {
+            snakeBody = sg.snakeBody;
+            board = sg.board;
+            foodLocation = sg.foodLocation;
+        }
+
+        public SnakeGame()
+        {
+        }
+
         public void buildGrid()
         {
             for (int i = 0; i < gridHeight; i++)
@@ -73,7 +84,7 @@ namespace EvoSnake
             pos[1] = x;
             snakeBody.Add(pos);
 
-            for (int i = 0; i < 3 ; i++)
+            for (int i = 0; i < 3; i++)
             {
                 int[] pos2 = new int[2];
                 y--;
@@ -85,12 +96,15 @@ namespace EvoSnake
         }
         public void updateBoard()
         {
-            for (int i = 0; i < snakeBody.Count; i++)
+            int[] headpos = snakeBody[0];
+            board[headpos[0], headpos[1]] = Box.SnakeHead;
+            for (int i = 1; i < snakeBody.Count; i++)
             {
                 int[] pos = snakeBody[i];
                 board[pos[0], pos[1]] = Box.SnakeBody;
             }
         }
+        
         public void DisplayBoard()
         {
             for (int i = 0; i < gridHeight; i++)
@@ -103,35 +117,40 @@ namespace EvoSnake
                     Console.Write(ele);
                 }
             }
-            
+
             Console.WriteLine();
             Console.WriteLine("The score is : " + score);
             Console.CursorVisible = false;
             Console.SetCursorPosition(0, 0);
         }
-        //This method returns the area around the head,
-        public List<Box> outputBox()
+        /*
+        public Box[,] getInputs()
         {
-            List<Box> outBox = new List<Box>();
+            Box[]
+        }
+        */
+        //This method returns the area around the head,
+        public int[] outputBox()
+        {
+            int[] outBox = new int[6];
             int[] headPos = snakeBody[0];
             headPosY = headPos[0];
             headPosX = headPos[1];
-            Box eleUp = board[headPosY--, headPosX];
-            Box eleDown = board[headPosY++, headPosX];
-            Box eleLeft = board[headPosY, headPosX--];
-            Box eleRight = board[headPosY, headPosX++];
-            Box eleUpLeft = board[headPosY--, headPosX--];
-            Box eleUpRight = board[headPosY--, headPosX++];
-            Box eleDownLeft = board[headPosY++, headPosX--];
-            Box eleDownRight = board[headPosY++, headPosX++];
-            outBox.Add(eleUp);
-            outBox.Add(eleDown);
-            outBox.Add(eleRight);
-            outBox.Add(eleLeft);
-            outBox.Add(eleUpLeft);
-            outBox.Add(eleUpRight);
-            outBox.Add(eleDownLeft);
-            outBox.Add(eleDownRight);
+            //inputs
+            int eleUp = (int)board[headPosY--, headPosX];
+            int eleDown = (int)board[headPosY++, headPosX];
+            int eleLeft = (int)board[headPosY, headPosX--];
+            int eleRight = (int)board[headPosY, headPosX++];
+            int distX = distanceToFoodX();
+            int distY = distanceToFoodY();
+
+            outBox[0] = eleUp;
+            outBox[1] = eleDown;
+            outBox[2] = eleLeft;
+            outBox[3] = eleRight;
+            outBox[4] = distX;
+            outBox[5] = distY;
+
             return outBox;
         }
         public int distanceToFood()
@@ -143,8 +162,25 @@ namespace EvoSnake
             distance += Math.Abs(headPosY - foodLocation[0]);
             distance += Math.Abs(headPosX - foodLocation[1]);
             return distance;
-             
+
         }
+
+        public int distanceToFoodY()
+        {
+            int[] headPos = snakeBody[0];
+            headPosY = headPos[0];           
+            int yDist = headPosY - foodLocation[0];        
+            return yDist;
+        }
+        public int distanceToFoodX()
+        {
+            int[] headPos = snakeBody[0];
+            headPosX = headPos[1];
+            int xDist = headPosX - foodLocation[1];
+            return xDist;
+        }
+           
+
         public void genNextFood()
         {
 
@@ -163,7 +199,7 @@ namespace EvoSnake
         }
         public Box[,] getBoxAroundHead()
         {
-
+            
             return board;
         }
         public void MakeMove(Direction move)
@@ -172,6 +208,12 @@ namespace EvoSnake
             headPosY = headPos[0];
             headPosX = headPos[1];
             int[] tailPos = snakeBody[snakeBody.Count - 1];
+            if (curDirection == Direction.Up && move==Direction.Down ||
+                curDirection == Direction.Down && move == Direction.Up || 
+                curDirection == Direction.Right && move==Direction.Left || curDirection == Direction.Left && move == Direction.Right)
+            {
+                return;
+            }
             curDirection = move;
             Boolean eated = false;
             if (move == Direction.Up)
@@ -326,8 +368,10 @@ namespace EvoSnake
             return -1;
         }
 
-
-
+        public Object Clone()
+        {
+            return new SnakeGame(this);
+        }
     }
 }
 
