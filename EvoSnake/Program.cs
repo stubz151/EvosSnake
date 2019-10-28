@@ -11,7 +11,7 @@ namespace EvoSnake
     {
         static void Main(string[] args)
         {
-
+            /*
             ConsoleKey input;
             SnakeGame sTest = new SnakeGame(20, 20);
 
@@ -55,45 +55,23 @@ namespace EvoSnake
             Console.Clear();
             sTest.DisplayBoard();
             Console.ReadLine();
-
-
-            /*
-
+            */         
             SnakeGame snakeyBoi = new SnakeGame(10, 20);
             GAClass ga = new GAClass(snakeyBoi);
             NeuralNetwork bestnn = ga.bestNN();
-            Stopwatch timer = new Stopwatch();
-            Console.WriteLine(ga.population.Count);
-           
-            Console.WriteLine(bestnn.vij[0]);
-            Console.WriteLine(bestnn.vij[1]);
-            Console.WriteLine(bestnn.vij[2]);
-            Console.WriteLine(bestnn.vij[3]);
-            Console.WriteLine(bestnn.wij[0]);
-            Console.WriteLine(bestnn.wij[1]);
-            Console.WriteLine(bestnn.wij[2]);
-            Console.WriteLine(bestnn.wij[3]);
-            Console.WriteLine(bestnn.wij[4]);
-            Console.WriteLine(bestnn.wij[5]);
-            /*
-            Console.ReadLine();
+            Stopwatch timer = new Stopwatch();        
             Console.Clear();
             while (snakeyBoi.gameOver == false)
             {
                 snakeyBoi.curDirection = Direction.Right;
-                Direction move = bestnn.calculateDirection(snakeyBoi.outputBox());
+                moves move = bestnn.calculateDirection(snakeyBoi.outputBox());
 
-                snakeyBoi.MakeMove(move);
+                snakeyBoi.moveHead(move);
                 snakeyBoi.DisplayBoard();
                 
-                System.Threading.Thread.Sleep(2000);
-                /*
-                timer.Start();
-                while (timer.Elapsed.TotalMilliseconds < 1000)
-                {
-                    ;
-                }
-                timer.Stop();
+                System.Threading.Thread.Sleep(100);
+            
+              
                 
             }
             snakeyBoi.DisplayBoard();
@@ -101,7 +79,7 @@ namespace EvoSnake
             Console.ReadLine();
 
         }
-        */
+       
         }
     }
-}
+

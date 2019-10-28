@@ -14,7 +14,7 @@ namespace EvoSnake
         public double[] ok { get; set; }    //output neurons for snake direction
         public double[] zi { get; set; }   //multidimensional array of inp  
         public double[] inputPattern = new double[6];  //value of input pattern
-        public double[] yi { get; set; }
+        public double[] yi { get; set; } = new double[6];
         Random Rgen = new Random();
 
 
@@ -48,7 +48,7 @@ namespace EvoSnake
                 }
             }
             //initialing hidden layer neurons
-
+           
 
 
         }

@@ -22,7 +22,7 @@ namespace EvoSnake
         int popSize = 1000;
         int iterations = 50;
         double crossOverRate = 0.5;
-        double mutationChance = 0.4;
+        double mutationChance = 0.2;
         double mutationMag = 0.05;
         int inputLayerSize = 6;
         int hiddenLayerSize = 4;
@@ -130,34 +130,42 @@ namespace EvoSnake
         }
         public NeuralNetwork crossGen(NeuralNetwork nn1 , NeuralNetwork nn2)
         {
-            Double[] inArr = new Double[6];
+            Double[,] inArr = new Double[6,10];
             Double[,] inputarr1 = nn1.vij;
             Double[,] inputarr2 = nn2.vij;
 
-
-            for (int i=0; i < inputLayerSize; i++)
+            for (int i = 0; i < inputarr1.GetUpperBound(0) + 1; i++)
             {
-                if (Rgen.NextDouble()>crossOverRate)
+                for (int j = 0; j < inputarr1.GetUpperBound(1) + 1; j++)
                 {
-                    inArr[i] = inputarr1[i];
-                }
-                else
-                {
-                    inArr[i] = inputarr2[i];
+                    if (Rgen.NextDouble() > crossOverRate)
+                    {
+                        inArr[i, j] = inputarr1[i, j];
+                    }
+                    else
+                    {
+                        inArr[i, j] = inputarr2[i, j];
+                    }  
                 }
             }
-            double[] hidArr = new double[4];
+
+
+         
+            double[,] hidArr = new double[10,3];
             Double[,] hidArr1 = nn1.wij;
             Double[,] hidArr2 = nn2.wij;
-            for (int i = 0; i < hiddenLayerSize; i++)
+            for (int i = 0; i < hidArr1.GetUpperBound(0) + 1; i++)
             {
-                if (Rgen.NextDouble() > crossOverRate)
+                for (int j = 0; j < hidArr2.GetUpperBound(1) + 1; j++)
                 {
-                    hidArr[i] = hidArr1[i];
-                }
-                else
-                {
-                    hidArr[i] = hidArr2[i];
+                    if (Rgen.NextDouble() > crossOverRate)
+                    {
+                        hidArr[i, j] = hidArr1[i, j];
+                    }
+                    else
+                    {
+                        hidArr[i, j] = hidArr2[i, j];
+                    }
                 }
             }
             NeuralNetwork nn = new NeuralNetwork();
@@ -168,24 +176,29 @@ namespace EvoSnake
 
         public NeuralNetwork Mutate(NeuralNetwork nn1)
         {
-            Double[] arr1 = nn1.vij;
-            Double[] arr2 = nn1.wij;
-            for (int i = 0; i < inputLayerSize; i++)
+            Double[,] arr1 = nn1.vij;
+            Double[,] arr2 = nn1.wij;
+            for (int i = 0; i < arr1.GetUpperBound(0) + 1; i++)
             {
-                if (Rgen.NextDouble() <= mutationChance)
+                for (int j = 0; j < arr1.GetUpperBound(1) + 1; j++)
                 {
-                    arr1[i] = arr1[i] + Rgen.NextDouble() * mutationMag;
+                    if (Rgen.NextDouble() > mutationChance)
+                    {
+                        arr1[i,j] = arr1[i, j] + Rgen.NextDouble() * mutationMag;
+                    }
                 }
-
             }
             nn1.vij = arr1;
-            for (int i = 0; i < hiddenLayerSize; i++)
-            {
-                if (Rgen.NextDouble() <= mutationChance)
-                {
-                    arr2[i] = arr2[i] + Rgen.NextDouble() * mutationMag;
-                }
 
+            for (int i = 0; i < arr2.GetUpperBound(0) + 1; i++)
+            {
+                for (int j = 0; j < arr2.GetUpperBound(1) + 1; j++)
+                {
+                    if (Rgen.NextDouble() > mutationChance)
+                    {
+                        arr2[i, j] = arr2[i, j] + Rgen.NextDouble() * mutationMag;
+                    }
+                }
             }
             nn1.wij = arr2;
             return nn1;
