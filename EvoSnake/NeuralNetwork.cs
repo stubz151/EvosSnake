@@ -122,7 +122,7 @@ namespace EvoSnake
         public double sig(double weight, double input)
         {
             double sum = weight * input;
-            double sig = 1.0f / (1.0f + (float)Math.Exp(-sum);
+            double sig = 1.0f / (1.0f + (float)Math.Exp(-sum));
             return sig;
         }
         /*

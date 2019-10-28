@@ -11,13 +11,17 @@ namespace EvoSnake
     {
         static void Main(string[] args)
         {
-           
+
             ConsoleKey input;
-            SnakeGame snakeyBoi = new SnakeGame(20,20);
+            SnakeGame sTest = new SnakeGame(20, 20);
+
+            SnakeGame snakeyBoi = new SnakeGame((SnakeGame)sTest.Clone());
+            //snakeyBoi = (SnakeGame)sTest.Clone();
             snakeyBoi.DisplayBoard();
             snakeyBoi.curDirection = Direction.Right;
-            while(snakeyBoi.gameOver==false)
-            {              
+
+            while (snakeyBoi.gameOver == false)
+            {
                 Direction move = snakeyBoi.curDirection;
                 Stopwatch timer = new Stopwatch();
                 timer.Start();
@@ -41,19 +45,20 @@ namespace EvoSnake
                         if (input == ConsoleKey.RightArrow)
                         {
                             move = Direction.Right;
-                        }                       
-                    }                   
+                        }
+                    }
                 }
                 timer.Stop();
-                                        
                 snakeyBoi.MakeMove(move);
                 snakeyBoi.DisplayBoard();
-               
-                           
             }
             Console.WriteLine("Game OVER!!");
-           
-             Console.ReadLine();
+
+            Console.ReadLine();
+            Console.Clear();
+            sTest.DisplayBoard();
+            Console.ReadLine();
+
 
         }
     }

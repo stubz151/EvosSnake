@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace EvoSnake
 {
-    class GA
-    {   
-       
+    class GAClass
+    {
         //population contains a list of units
-        List<NeuralNetwork> population = new List<double[][]>();
+        List<NeuralNetwork> population = new List<NeuralNetwork>();
         SnakeGame snake = new SnakeGame(20, 20);
         //4 possible moves with different double values, will pick the highest one from the nn
         double[] moveResult = new double[4];
@@ -19,13 +18,10 @@ namespace EvoSnake
         //the distance between the snake and food pre-move.
         double distanceToFoodBefore;
         int popSize = 100;
-        public GA ()
-        {
-
-        }
+        
         public void genPop()
         {
-            for (int i=0; i<popSize; i++)
+            for (int i = 0; i < popSize; i++)
             {
                 NeuralNetwork nn = new NeuralNetwork();
                 population.Add(nn);
@@ -33,22 +29,35 @@ namespace EvoSnake
         }
         public void Train()
         {
-            for (int i =0; i < iterations;i++)
+            for (int i = 0; i < iterations; i++)
             {
-                while (snake.GameOver==false)
+                while (snake.gameOver == false)
                 {
-                    SnakeGame temp = (SnakeGame)snake.Clone();  
-                    
+                    SnakeGame temp = (SnakeGame)snake.Clone();
+
                 }
             }
         }
-        public int result()
+        public int result(Direction move)
         {
             int distanceBefore = snake.distanceToFood();
-          
+            SnakeGame temp = (SnakeGame)snake.Clone();
+            temp.MakeMove(move);
             int result = 0;
-            if (distanceBefore<)
+            if (temp.gameOver == true)
+            {
+                
+            }
+            else
+            {
+                result++;
+                if (temp.distanceToFood() < distanceBefore)
+                {
+                    result++;
+                }
 
+            }
+            return result;
         }
     }
 }

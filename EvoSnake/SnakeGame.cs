@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,7 +20,7 @@ namespace EvoSnake
         Food = 3, 
         SnakeHead = 4
     }
-    class SnakeGame : ICloneable
+    class SnakeGame :ICloneable
     {
         int[] foodLocation { get; set; } = new int[2];
         int score { get; set; }
@@ -44,17 +45,27 @@ namespace EvoSnake
             genSnake();
             genNextFood();
         }
+        public SnakeGame(int s, int gridW, int gridH, Box[,] b, int[] fl, List<int[]> sb )
+        {
+            score = s;
+            gridWidth = gridW;
+            gridHeight = gridH;
+            snakeBody = sb;
+            board = b;
+            foodLocation = fl;
+            updateBoard();
+        }
         public SnakeGame(SnakeGame sg)
         {
+            score = sg.score;
+            gridWidth = sg.gridWidth;
+            gridHeight = sg.gridHeight;
             snakeBody = sg.snakeBody;
-            board = sg.board;
-            foodLocation = sg.foodLocation;
+            board = (Box[,])sg.board.Clone();
+            foodLocation = (int[])sg.foodLocation.Clone();
+            updateBoard();
         }
-
-        public SnakeGame()
-        {
-        }
-
+      
         public void buildGrid()
         {
             for (int i = 0; i < gridHeight; i++)
@@ -367,11 +378,47 @@ namespace EvoSnake
             }
             return -1;
         }
+       /*
+        public SnakeGame ShallowClone()
+        {
+            return (SnakeGame)this.MemberwiseClone();
+        }
+        */
+        public SnakeGame DeepCopy()
+        {
+            
+            SnakeGame other = (SnakeGame)this.MemberwiseClone();
+            other.score = score;
+            other.gridWidth = gridWidth;
+            other.gridHeight = gridHeight;
+            
+            List<int[]> newList = new List<int[]>(snakeBody.Count);
+            foreach (int[] item in snakeBody)
+                newList.Add((int[])item.Clone());
+            other.snakeBody = newList;
 
+            other.board = (Box[,])board.Clone();
+            other.foodLocation = (int[])foodLocation.Clone();
+            
+            return other;
+        }
+        
         public Object Clone()
         {
-            return new SnakeGame(this);
+            int Tempscore = score;
+            int tempWidth = gridWidth;
+            int tempHeight = gridHeight;
+            Box[,] tempBoard = (Box[,])board.Clone();
+            int[] foodpos = (int[])foodLocation.Clone();
+            List<int[]> sb = snakeBody;
+            List<int[]> newList = new List<int[]>(snakeBody.Count);
+            foreach (int[] item in snakeBody)
+                newList.Add((int[])item.Clone());
+            
+        
+            return new SnakeGame(Tempscore, tempWidth, tempHeight, tempBoard, foodpos, newList);
         }
+        
     }
 }
 

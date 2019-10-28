@@ -43,11 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GAClass.cs" />
     <Compile Include="NeuralNetwork.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SnakeGame.cs" />
-    <Compile Include="StubbsNN.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
