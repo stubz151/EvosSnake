@@ -9,7 +9,6 @@ namespace EvoSnake
 {
     public class NeuralNetwork
     {
-        /*
         public double[,] vij { get; set; }   //weights from inut variables into hidden layer
         public double[,] wij { get; set; }   //weights from hidden layer into output layer
         public double[] ok { get; set; }    //output neurons for snake direction
@@ -17,16 +16,16 @@ namespace EvoSnake
         public double[] inputPattern = new double[6];  //value of input pattern
         public double[] yi { get; set; }
         Random Rgen = new Random();
-       
+
 
         public NeuralNetwork()
         {
-            vij = new double[6];
-            wij = new double[4];
-            ok = new double[4];
+            vij = new double[6, 10];  //6 by 10 as there are 10 hidden neurons
+            wij = new double[10, 3]; //10 by 4 as there are 10 hidden neurons and 3 output neurons
+            ok = new double[3];
             zi = new double[6];
             makeNN();
-           // snakeyBoi = new SnakeGame(20, 20);  //initialing the size of the board in the neural network class
+            // snakeyBoi = new SnakeGame(20, 20);  //initialing the size of the board in the neural network class
         }
         //initialising neural network
         public void makeNN()
@@ -41,7 +40,7 @@ namespace EvoSnake
                 }
             }
             //initilse weights between hidden and output
-            for(int i = 0; i < wij.GetUpperBound(0) + 1; i++)
+            for (int i = 0; i < wij.GetUpperBound(0) + 1; i++)
             {
                 for (int j = 0; j < wij.GetUpperBound(1) + 1; j++)
                 {
@@ -75,50 +74,70 @@ namespace EvoSnake
         public void setInputs(double[] arrInputs)      //arrInputs is the inputs array from for the genetic algorithm, called each generation of learning
         {
             for (int i = 0; i < arrInputs.Length; i++)
-            {              
-                    zi[i] = arrInputs[i];               
+            {
+                zi[i] = arrInputs[i];
             }
         }
-        public Direction calculateDirection(double[] arrInputs)
+        public moves calculateDirection(double[] arrInputs)
         {
             setInputs(arrInputs);
-            double resultOfInputLayer=0;
-            for (int i = 0; i < vij.Length; i++)
+            double resultOfInputLayer = 0;
+            //getting hidden neurons
+            for (int i = 0; i < yi.Length; i++)
             {
-                resultOfInputLayer = resultOfInputLayer + sig(vij[i], zi[i]);               
+                double temp2 = 0;
+                for (int j = 0; j < zi.Length; j++)
+                {
+                    temp2 = temp2 + (zi[j] * vij[j, i]);
+                }
+                yi[i] = temp2;
             }
+            //getting output neurons
+            for (int i = 0; i < ok.Length; i++)
+            {
+                double temp1 = 0;
+                for (int j = 0; j < yi.Length; j++)
+                {
+                    temp1 = temp1 + (yi[j] * wij[j, i]);
+                }
+                ok[i] = temp1;
+            }
+            //for (int i = 0; i < vij.Length; i++)
+            //{
+            //    resultOfInputLayer = resultOfInputLayer + sig(vij[i], zi[i]);               
+            //}
+
+
+
             double resultsOfHiddenLayer = 0;
-            for (int i = 0; i < wij.Length; i++)
-            {
-                ok[i] = resultOfInputLayer + wij[i]* resultOfInputLayer;
-            }
-            double bestValue=-100;
+            //for (int i = 0; i < wij.Length; i++)
+            //{
+            //    ok[i] = resultOfInputLayer + wij[i]* resultOfInputLayer;
+            //}
+            double bestValue = -100;
             int bestMove = -1;
-            for (int i =0; i< ok.Length; i++)
+            for (int i = 0; i < ok.Length; i++)
             {
-                if (ok[i]> bestValue)
+                if (ok[i] > bestValue)
                 {
                     bestValue = ok[i];
                     bestMove = i;
                 }
             }
-            if (bestMove==0)
+            if (bestMove == 0)
             {
-                return Direction.Up;
+                return moves.Forward;
             }
             if (bestMove == 1)
             {
-                return Direction.Down;
+                return moves.Left;
             }
             if (bestMove == 2)
             {
-                return Direction.Left;
+                return moves.Right;
             }
-            if (bestMove == 3)
-            {
-                return Direction.Right;
-            }
-            return Direction.Up;
+
+            return moves.Forward;
         }
         public double sig(double weight, double input)
         {

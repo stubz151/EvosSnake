@@ -8,12 +8,12 @@ namespace EvoSnake
 {
     class GAClass
     {
-        /*
+       
         //population contains a list of units
         public List<NeuralNetwork> population = new List<NeuralNetwork>();
         SnakeGame snake;
-        //4 possible moves with different double values, will pick the highest one from the nn
-        double[] moveResult = new double[4];
+        //3 possible moves with different double values, will pick the highest one from the nn
+        double[] moveResult = new double[3];
       
       
         Random Rgen = new Random();
@@ -103,7 +103,7 @@ namespace EvoSnake
             SnakeGame temp = new SnakeGame((SnakeGame)snake.Clone());            
             while (temp.gameOver == false)
             {
-                temp.MakeMove(nn.calculateDirection(temp.outputBox()));
+                temp.moveHead(nn.calculateDirection(temp.getInputs()));
             }
             return temp.score;
         }
@@ -117,7 +117,7 @@ namespace EvoSnake
                 NeuralNetwork nn = population[i];
                 while (temp.gameOver==false)
                 {
-                    temp.MakeMove(nn.calculateDirection(temp.outputBox()));
+                    temp.moveHead(nn.calculateDirection(temp.getInputs()));
                 }
                 if (temp.score > bestScore)
                 {
@@ -131,8 +131,10 @@ namespace EvoSnake
         public NeuralNetwork crossGen(NeuralNetwork nn1 , NeuralNetwork nn2)
         {
             Double[] inArr = new Double[6];
-            Double[] inputarr1 = nn1.vij;
-            Double[] inputarr2 = nn2.vij;
+            Double[,] inputarr1 = nn1.vij;
+            Double[,] inputarr2 = nn2.vij;
+
+
             for (int i=0; i < inputLayerSize; i++)
             {
                 if (Rgen.NextDouble()>crossOverRate)
@@ -145,8 +147,8 @@ namespace EvoSnake
                 }
             }
             double[] hidArr = new double[4];
-            Double[] hidArr1 = nn1.wij;
-            Double[] hidArr2 = nn2.wij;
+            Double[,] hidArr1 = nn1.wij;
+            Double[,] hidArr2 = nn2.wij;
             for (int i = 0; i < hiddenLayerSize; i++)
             {
                 if (Rgen.NextDouble() > crossOverRate)
@@ -208,6 +210,6 @@ namespace EvoSnake
             }
             return result;
             }
-            */
+          
     }
 }

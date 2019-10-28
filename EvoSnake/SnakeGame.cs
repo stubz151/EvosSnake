@@ -72,6 +72,72 @@ namespace EvoSnake
             foodLocation = (int[])sg.foodLocation.Clone();
             updateBoard();
         }
+        //use this to get inputs
+        public double[] getInputs()
+        {
+            double[] inputs = new double[6];
+            inputs[0] = (double)board[posForward[0] , posForward[1]];
+            inputs[1] = (double)board[posLeft[0], posRight[1]];
+            inputs[2] = (double)board[posRight[0], posRight[1]];
+            inputs[3] = resultOfMove(moves.Forward);
+            inputs[4] = resultOfMove(moves.Left);
+            inputs[5] = resultOfMove(moves.Right);
+            return inputs;
+        }
+
+        public double resultOfMove(moves move)
+        {         
+            int distanceBefore = distanceToFood();
+            moves closestMove = moves.Forward;           
+            SnakeGame temp = (SnakeGame)this.Clone();
+            temp.moveHead(move);
+            if (temp.distanceToFood() < distanceBefore)
+            {
+                return 1.00;
+            }
+            return 0;                    
+        }
+
+        public void setAreaAroundHead()
+        {
+            switch (curDirection)
+            {
+                case Direction.Up:
+                    posForward[0] = headPosY - 1;
+                    posForward[1] = headPosX;
+                    posLeft[0] = headPosY;
+                    posLeft[1] = headPosX - 1;
+                    posRight[0] = headPosY;
+                    posRight[1] = headPosX + 1;
+                    break;
+                case Direction.Down:
+                    posForward[0] = headPosY + 1;
+                    posForward[1] = headPosX;
+                    posLeft[0] = headPosY;
+                    posLeft[1] = headPosX + 1;
+                    posRight[0] = headPosY;
+                    posRight[1] = headPosX - 1;
+                   break;
+                case Direction.Right:
+                    posForward[0] = headPosY;
+                    posForward[1] = headPosX + 1;
+                    posLeft[0] = headPosY - 1;
+                    posLeft[1] = headPosX;
+                    posRight[0] = headPosY + 1;
+                    posRight[1] = headPosX;
+                    break;
+                case Direction.Left:
+                    posForward[0] = headPosY;
+                    posForward[1] = headPosX - 1;
+                    posLeft[0] = headPosY + 1;
+                    posLeft[1] = headPosX;
+                    posRight[0] = headPosY - 1;
+                    posRight[1] = headPosX;
+                    break;
+            }
+        }
+
+        //Call this method with the appropraite move and it will do all the heavy lifting :)
         public void moveHead(moves move)
         {
             int[] headPos = snakeBody[0];
@@ -82,12 +148,7 @@ namespace EvoSnake
             switch(curDirection)
             {
                 case Direction.Up:
-                    posForward[0] = headPosY -1;
-                    posForward[1] = headPosX;
-                    posLeft[0] = headPosY;                    
-                    posLeft[1] = headPosX - 1;
-                    posRight[0] = headPosY;
-                    posRight[1] = headPosX + 1;
+                    
                     if (move == moves.Forward)
                     {
                         newDirection = curDirection;
@@ -102,12 +163,7 @@ namespace EvoSnake
                     }
                     break;
                 case Direction.Down:
-                    posForward[0] = headPosY + 1;
-                    posForward[1] = headPosX;
-                    posLeft[0] = headPosY;                   
-                    posLeft[1] = headPosX + 1;
-                    posRight[0] = headPosY;
-                    posRight[1] = headPosX - 1;
+                   
                     if (move == moves.Forward)
                     {
                         newDirection = Direction.Down;
@@ -122,12 +178,7 @@ namespace EvoSnake
                     }
                     break;
                 case Direction.Right:
-                    posForward[0] = headPosY;
-                    posForward[1] = headPosX+1;
-                    posLeft[0] = headPosY - 1;
-                    posLeft[1] = headPosX;
-                    posRight[0] = headPosY + 1;
-                    posRight[1] = headPosX;
+                    
 
                     if (move == moves.Forward)
                     {
@@ -143,12 +194,7 @@ namespace EvoSnake
                     }
                     break;
                 case Direction.Left:
-                    posForward[0] = headPosY;
-                    posForward[1] = headPosX - 1;
-                    posLeft[0] = headPosY + 1;
-                    posLeft[1] = headPosX;
-                    posRight[0] = headPosY - 1;
-                    posRight[1] = headPosX;
+                    
                     if (move == moves.Forward)
                     {
                         newDirection = curDirection;
@@ -163,19 +209,9 @@ namespace EvoSnake
                     }
                     break;                
             }
-            if (move==moves.Forward)
-            {
-                int[] newHead = posForward;
-            }
-            if (move == moves.Left)
-            {
-                int[] newHead = posLeft;
-            }
-            if (move == moves.Right)
-            {
-                int[] newHead = posRight;
-            }
             MakeMove(newDirection);
+            setAreaAroundHead();
+                    
         }
         public void MakeMove(Direction move)
         {
