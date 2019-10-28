@@ -27,6 +27,9 @@ namespace EvoSnake
     class SnakeGame :ICloneable
     {
         public int[] foodLocation { get; set; } = new int[2];
+        int[] posForward { get; set; } = new int[2];
+        int[] posLeft { get; set; } = new int[2];
+        int[] posRight { get; set; } = new int[2];
         public int score { get; set; }
         public Direction curDirection { get; set; }
         public Boolean gameOver { get; set; } = false;
@@ -69,11 +72,230 @@ namespace EvoSnake
             foodLocation = (int[])sg.foodLocation.Clone();
             updateBoard();
         }
-        public void moveHead()
+        public void moveHead(moves move)
         {
+            int[] headPos = snakeBody[0];
+            headPosY = headPos[0];
+            headPosX = headPos[1];
+            int[] tailPos = snakeBody[snakeBody.Count - 1];
+            Direction newDirection = curDirection;
+            switch(curDirection)
+            {
+                case Direction.Up:
+                    posForward[0] = headPosY -1;
+                    posForward[1] = headPosX;
+                    posLeft[0] = headPosY;                    
+                    posLeft[1] = headPosX - 1;
+                    posRight[0] = headPosY;
+                    posRight[1] = headPosX + 1;
+                    if (move == moves.Forward)
+                    {
+                        newDirection = curDirection;
+                    }
+                    if (move == moves.Right)
+                    {
+                        newDirection = Direction.Right;
+                    }
+                    if (move == moves.Left)
+                    {
+                        newDirection = Direction.Left;
+                    }
+                    break;
+                case Direction.Down:
+                    posForward[0] = headPosY + 1;
+                    posForward[1] = headPosX;
+                    posLeft[0] = headPosY;                   
+                    posLeft[1] = headPosX + 1;
+                    posRight[0] = headPosY;
+                    posRight[1] = headPosX - 1;
+                    if (move == moves.Forward)
+                    {
+                        newDirection = Direction.Down;
+                    }
+                    if (move == moves.Right)
+                    {
+                        newDirection = Direction.Left;
+                    }
+                    if (move == moves.Left)
+                    {
+                        newDirection = Direction.Right;
+                    }
+                    break;
+                case Direction.Right:
+                    posForward[0] = headPosY;
+                    posForward[1] = headPosX+1;
+                    posLeft[0] = headPosY - 1;
+                    posLeft[1] = headPosX;
+                    posRight[0] = headPosY + 1;
+                    posRight[1] = headPosX;
 
+                    if (move == moves.Forward)
+                    {
+                        newDirection = curDirection;
+                    }
+                    if (move == moves.Right)
+                    {
+                        newDirection = Direction.Down;
+                    }
+                    if (move == moves.Left)
+                    {
+                        newDirection = Direction.Up;
+                    }
+                    break;
+                case Direction.Left:
+                    posForward[0] = headPosY;
+                    posForward[1] = headPosX - 1;
+                    posLeft[0] = headPosY + 1;
+                    posLeft[1] = headPosX;
+                    posRight[0] = headPosY - 1;
+                    posRight[1] = headPosX;
+                    if (move == moves.Forward)
+                    {
+                        newDirection = curDirection;
+                    }
+                    if (move == moves.Right)
+                    {
+                        newDirection = Direction.Up;
+                    }
+                    if (move == moves.Left)
+                    {
+                        newDirection = Direction.Down;
+                    }
+                    break;                
+            }
+            if (move==moves.Forward)
+            {
+                int[] newHead = posForward;
+            }
+            if (move == moves.Left)
+            {
+                int[] newHead = posLeft;
+            }
+            if (move == moves.Right)
+            {
+                int[] newHead = posRight;
+            }
+            MakeMove(newDirection);
         }
-       
+        public void MakeMove(Direction move)
+        {
+            int[] headPos = snakeBody[0];
+            headPosY = headPos[0];
+            headPosX = headPos[1];
+            int[] tailPos = snakeBody[snakeBody.Count - 1];
+            
+            curDirection = move;
+            Boolean eated = false;
+            if (move == Direction.Up)
+            {
+                int newHeadPosY = headPosY - 1;
+                int[] newHead = new int[2];
+                newHead[0] = newHeadPosY;
+                newHead[1] = headPosX;
+                snakeBody.Insert(0, newHead);
+                switch (checkCollision())
+                {
+                    case 0:
+                        int[] tailpos = snakeBody[snakeBody.Count - 1];
+                        int tailPosY = tailpos[0];
+                        int tailPosX = tailpos[1];
+                        board[tailPosY, tailPosX] = Box.Empty;
+                        snakeBody.RemoveAt(snakeBody.Count - 1);
+                        break;
+
+                    case 1:
+                        eated = true;
+                        score++;
+                        break;
+                    case 2:
+                        break;
+                }
+            }
+            if (move == Direction.Down)
+            {
+                int newHeadPosY = headPosY + 1;
+                int[] newHead = new int[2];
+                newHead[0] = newHeadPosY;
+                newHead[1] = headPosX;
+                snakeBody.Insert(0, newHead);
+                switch (checkCollision())
+                {
+                    case 0:
+                        int[] tailpos = snakeBody[snakeBody.Count - 1];
+                        int tailPosY = tailpos[0];
+                        int tailPosX = tailpos[1];
+                        board[tailPosY, tailPosX] = Box.Empty;
+                        snakeBody.RemoveAt(snakeBody.Count - 1);
+                        break;
+                    case 1:
+                        eated = true;
+                        score++;
+                        break;
+                    case 2:
+                        break;
+
+                }
+            }
+            if (move == Direction.Left)
+            {
+                int newHeadPosX = headPosX - 1;
+                int[] newHead = new int[2];
+                newHead[0] = headPosY;
+                newHead[1] = newHeadPosX;
+                snakeBody.Insert(0, newHead);
+                switch (checkCollision())
+                {
+                    case 0:
+                        int[] tailpos = snakeBody[snakeBody.Count - 1];
+                        int tailPosY = tailpos[0];
+                        int tailPosX = tailpos[1];
+                        board[tailPosY, tailPosX] = Box.Empty;
+                        snakeBody.RemoveAt(snakeBody.Count - 1);
+                        break;
+
+                    case 1:
+                        eated = true;
+                        score++;
+                        break;
+                    case 2:
+                        break;
+
+                }
+            }
+            if (move == Direction.Right)
+            {
+                int newHeadPosX = headPosX + 1;
+                int[] newHead = new int[2];
+                newHead[0] = headPosY;
+                newHead[1] = newHeadPosX;
+                snakeBody.Insert(0, newHead);
+                switch (checkCollision())
+                {
+                    case 0:
+                        int[] tailpos = snakeBody[snakeBody.Count - 1];
+                        int tailPosY = tailpos[0];
+                        int tailPosX = tailpos[1];
+                        board[tailPosY, tailPosX] = Box.Empty;
+                        snakeBody.RemoveAt(snakeBody.Count - 1);
+                        break;
+
+                    case 1:
+                        eated = true;
+                        score++;
+                        break;
+                    case 2:
+                        break;
+
+                }
+            }
+
+            updateBoard();
+            if (eated)
+            {
+                genNextFood();
+            }
+        }
+
 
         public void buildGrid()
         {
@@ -222,129 +444,7 @@ namespace EvoSnake
             
             return board;
         }
-        public void MakeMove(Direction move)
-        {
-            int[] headPos = snakeBody[0];
-            headPosY = headPos[0];
-            headPosX = headPos[1];
-            int[] tailPos = snakeBody[snakeBody.Count - 1];
-            if (curDirection == Direction.Up && move==Direction.Down ||
-                curDirection == Direction.Down && move == Direction.Up || 
-                curDirection == Direction.Right && move==Direction.Left || curDirection == Direction.Left && move == Direction.Right)
-            {
-                return;
-            }
-            curDirection = move;
-            Boolean eated = false;
-            if (move == Direction.Up)
-            {
-                    int newHeadPosY = headPosY - 1;
-                    int[] newHead = new int[2];
-                    newHead[0] = newHeadPosY;
-                    newHead[1] = headPosX;
-                    snakeBody.Insert(0, newHead);
-                    switch (checkCollision())
-                    {
-                        case 0:
-                        int[] tailpos = snakeBody[snakeBody.Count - 1];
-                        int tailPosY = tailpos[0];
-                        int tailPosX = tailpos[1];
-                        board[tailPosY, tailPosX] = Box.Empty;
-                        snakeBody.RemoveAt(snakeBody.Count - 1);
-                            break;
-                            
-                        case 1:
-                        eated = true;
-                            score++;
-                            break;
-                        case 2:
-                            break;
-                    }
-            }
-            if (move == Direction.Down)
-            {
-                    int newHeadPosY = headPosY + 1;
-                    int[] newHead = new int[2];
-                    newHead[0] = newHeadPosY;
-                    newHead[1] = headPosX;
-                    snakeBody.Insert(0, newHead);
-                    switch (checkCollision())
-                    {
-                        case 0:
-                        int[] tailpos = snakeBody[snakeBody.Count - 1];
-                        int tailPosY = tailpos[0];
-                        int tailPosX = tailpos[1];
-                        board[tailPosY, tailPosX] = Box.Empty;
-                        snakeBody.RemoveAt(snakeBody.Count - 1);
-                            break;
-                        case 1:
-                        eated = true;
-                            score++;
-                            break;
-                        case 2:
-                            break;
-
-                    }
-            }
-            if (move == Direction.Left)
-            {
-                    int newHeadPosX = headPosX - 1;
-                    int[] newHead = new int[2];
-                    newHead[0] = headPosY;
-                    newHead[1] = newHeadPosX;
-                    snakeBody.Insert(0, newHead);
-                    switch (checkCollision())
-                    {
-                        case 0:
-                        int[] tailpos = snakeBody[snakeBody.Count - 1];
-                        int tailPosY = tailpos[0];
-                        int tailPosX = tailpos[1];
-                        board[tailPosY,tailPosX] = Box.Empty;
-                            snakeBody.RemoveAt(snakeBody.Count - 1);
-                            break;
-
-                        case 1:
-                        eated = true;
-                        score++;
-                            break;
-                        case 2:
-                            break;
-
-                    }
-            }
-            if (move == Direction.Right)
-            {
-                    int newHeadPosX = headPosX + 1;
-                    int[] newHead = new int[2];
-                    newHead[0] = headPosY;
-                    newHead[1] = newHeadPosX;
-                    snakeBody.Insert(0, newHead);
-                    switch (checkCollision())
-                    {
-                        case 0:
-                        int[] tailpos = snakeBody[snakeBody.Count - 1];
-                        int tailPosY = tailpos[0];
-                        int tailPosX = tailpos[1];
-                        board[tailPosY, tailPosX] = Box.Empty;
-                        snakeBody.RemoveAt(snakeBody.Count - 1);
-                            break;
-
-                        case 1:
-                        eated = true;
-                        score++;
-                            break;
-                        case 2:
-                            break;
-
-                    }
-            }
-            
-            updateBoard();
-            if (eated)
-            {
-                genNextFood();
-            }
-        }
+        
 
 
         public int checkCollision()

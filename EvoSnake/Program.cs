@@ -11,10 +11,10 @@ namespace EvoSnake
     {
         static void Main(string[] args)
         {
-            /*
+
             ConsoleKey input;
             SnakeGame sTest = new SnakeGame(20, 20);
-            
+
             SnakeGame snakeyBoi = new SnakeGame((SnakeGame)sTest.Clone());
             //snakeyBoi = (SnakeGame)sTest.Clone();
             snakeyBoi.DisplayBoard();
@@ -22,7 +22,7 @@ namespace EvoSnake
 
             while (snakeyBoi.gameOver == false)
             {
-                Direction move = snakeyBoi.curDirection;
+                moves move = moves.Forward;
                 Stopwatch timer = new Stopwatch();
                 timer.Start();
                 while (timer.Elapsed.TotalMilliseconds < 100)
@@ -32,24 +32,21 @@ namespace EvoSnake
                         input = Console.ReadKey().Key;
                         if (input == ConsoleKey.UpArrow)
                         {
-                            move = Direction.Up;
+                            move = moves.Forward;
                         }
-                        if (input == ConsoleKey.DownArrow)
-                        {
-                            move = Direction.Down;
-                        }
+                        
                         if (input == ConsoleKey.LeftArrow)
                         {
-                            move = Direction.Left;
+                            move = moves.Left;
                         }
                         if (input == ConsoleKey.RightArrow)
                         {
-                            move = Direction.Right;
+                            move = moves.Right;
                         }
                     }
                 }
                 timer.Stop();
-                snakeyBoi.MakeMove(move);
+                snakeyBoi.moveHead(move);
                 snakeyBoi.DisplayBoard();
             }
             Console.WriteLine("Game OVER!!");
@@ -59,14 +56,15 @@ namespace EvoSnake
             sTest.DisplayBoard();
             Console.ReadLine();
 
-    */
+
+            /*
 
             SnakeGame snakeyBoi = new SnakeGame(10, 20);
             GAClass ga = new GAClass(snakeyBoi);
             NeuralNetwork bestnn = ga.bestNN();
             Stopwatch timer = new Stopwatch();
             Console.WriteLine(ga.population.Count);
-            /*
+           
             Console.WriteLine(bestnn.vij[0]);
             Console.WriteLine(bestnn.vij[1]);
             Console.WriteLine(bestnn.vij[2]);
@@ -77,7 +75,7 @@ namespace EvoSnake
             Console.WriteLine(bestnn.wij[3]);
             Console.WriteLine(bestnn.wij[4]);
             Console.WriteLine(bestnn.wij[5]);
-            */
+            /*
             Console.ReadLine();
             Console.Clear();
             while (snakeyBoi.gameOver == false)
@@ -96,12 +94,14 @@ namespace EvoSnake
                     ;
                 }
                 timer.Stop();
-                */
+                
             }
             snakeyBoi.DisplayBoard();
             Console.WriteLine("Game OVER!!");
             Console.ReadLine();
 
+        }
+        */
         }
     }
 }

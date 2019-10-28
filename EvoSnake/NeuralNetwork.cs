@@ -9,6 +9,7 @@ namespace EvoSnake
 {
     public class NeuralNetwork
     {
+        /*
         public double[,] vij { get; set; }   //weights from inut variables into hidden layer
         public double[,] wij { get; set; }   //weights from hidden layer into output layer
         public double[] ok { get; set; }    //output neurons for snake direction

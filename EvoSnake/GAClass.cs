@@ -8,6 +8,7 @@ namespace EvoSnake
 {
     class GAClass
     {
+        /*
         //population contains a list of units
         public List<NeuralNetwork> population = new List<NeuralNetwork>();
         SnakeGame snake;
@@ -207,5 +208,6 @@ namespace EvoSnake
             }
             return result;
             }
+            */
     }
 }
