@@ -14,9 +14,9 @@ namespace EvoSnake
         public double[] ok { get; set; }    //output neurons for snake direction
         public double[] zi { get; set; }   //multidimensional array of inp  
         public double[] inputPattern = new double[6];  //value of input pattern
-        double[] yi { get; set; }
+        public double[] yi { get; set; }
         Random Rgen = new Random();
-        SnakeGame snakeyBoi;
+       
 
         public NeuralNetwork()
         {
@@ -46,16 +46,7 @@ namespace EvoSnake
             }
             //initialing hidden layer neurons
             
-            for (int i = 0; i < yi.Length; i++)
-            {
-                yi[i] = 0;
-            }
            
-            //initialing output layer neurons
-            for (int i = 0; i < ok.Length; i++)
-            {
-                ok[i] = 0;
-            }
 
         }
 

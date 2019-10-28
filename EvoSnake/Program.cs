@@ -11,7 +11,7 @@ namespace EvoSnake
     {
         static void Main(string[] args)
         {
-
+            /*
             ConsoleKey input;
             SnakeGame sTest = new SnakeGame(20, 20);
             
@@ -59,6 +59,26 @@ namespace EvoSnake
             sTest.DisplayBoard();
             Console.ReadLine();
 
+    */
+
+            SnakeGame snakeyBoi = new SnakeGame(10, 20);
+            GAClass ga = new GAClass(snakeyBoi);
+            NeuralNetwork bestnn = ga.bestNN();
+            Stopwatch timer = new Stopwatch();
+            Console.WriteLine(ga.population.Count);
+            Console.ReadLine();
+            while (snakeyBoi.gameOver == false)
+            {
+                snakeyBoi.MakeMove(bestnn.calculateDirection(snakeyBoi.outputBox()));
+                snakeyBoi.DisplayBoard();
+                timer.Start();
+                while (timer.Elapsed.TotalMilliseconds < 100)
+                {
+                }
+                timer.Stop();
+            }
+            Console.WriteLine("Game OVER!!");
+            Console.ReadLine();
 
         }
     }

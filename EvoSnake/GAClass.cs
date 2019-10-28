@@ -9,8 +9,8 @@ namespace EvoSnake
     class GAClass
     {
         //population contains a list of units
-        List<NeuralNetwork> population = new List<NeuralNetwork>();
-        SnakeGame snake = new SnakeGame(20, 20);
+        public List<NeuralNetwork> population = new List<NeuralNetwork>();
+        SnakeGame snake;
         //4 possible moves with different double values, will pick the highest one from the nn
         double[] moveResult = new double[4];
       
@@ -25,6 +25,14 @@ namespace EvoSnake
         double mutationMag = 2.0;
         int inputLayerSize = 6;
         int hiddenLayerSize = 4;
+
+        public GAClass (SnakeGame s)
+        {
+            this.snake = s;
+            genPop();
+            Train();
+
+        }
         public void genPop()
         {
             for (int i = 0; i < popSize; i++)
@@ -36,11 +44,15 @@ namespace EvoSnake
         public void Train()
         {
             int t = 0;
+            SnakeGame temp = new SnakeGame((SnakeGame)snake.Clone());
             while (t< iterations) {
-                List<NeuralNetwork> newPop = new List<NeuralNetwork>();
-                while(newPop.Count< population.Count)
+                List<NeuralNetwork> newPop = new List<NeuralNetwork>();               
+                while (newPop.Count< population.Count)
                 {             
-                    SnakeGame temp = new SnakeGame((SnakeGame)snake.Clone());
+                   if (temp.gameOver==true)
+                    {
+                        temp = new SnakeGame((SnakeGame)snake.Clone());
+                    }
                     NeuralNetwork bestNN1 = new NeuralNetwork();
                     NeuralNetwork bestNN2 = new NeuralNetwork();
                     int bestResult1 = -1;
@@ -73,11 +85,33 @@ namespace EvoSnake
                     crossedNN = Mutate(crossedNN);
                     newPop.Add(crossedNN);
                 }
+                int nextnum2 = Rgen.Next(newPop.Count);
+                temp.MakeMove(newPop[nextnum2].calculateDirection(temp.outputBox()));               
                 population = newPop;
                 t++;
             }
         }
+        public NeuralNetwork bestNN()
+        {
+            int bestScore = 0;
+            NeuralNetwork bestNN = population[0];
+            for (int i =0; i< population.Count;i++)
+            {
+                SnakeGame temp = new SnakeGame((SnakeGame)snake.Clone());
+                NeuralNetwork nn = population[i];
+                while (temp.gameOver==false)
+                {
+                    temp.MakeMove(nn.calculateDirection(temp.outputBox()));
+                }
+                if (temp.score > bestScore)
+                {
+                    bestScore = temp.score;
+                    bestNN = nn;
+                }
+            }
+            return bestNN;
 
+        }
         public NeuralNetwork crossGen(NeuralNetwork nn1 , NeuralNetwork nn2)
         {
             Double[] inArr = new Double[6];

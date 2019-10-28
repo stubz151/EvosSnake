@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 namespace EvoSnake
 {
     //Enums are cool classes that contain information on certain variable names, so Direction.Up =0 this is useful as it gives us a way to easily check values.
-    enum Direction
+    public enum Direction
     {
         Up,Down,Left,Right
     }
-    enum Box
+   public enum Box
     {
         Empty = 0,
         Wall = 1,
@@ -22,8 +22,8 @@ namespace EvoSnake
     }
     class SnakeGame :ICloneable
     {
-        int[] foodLocation { get; set; } = new int[2];
-        int score { get; set; }
+        public int[] foodLocation { get; set; } = new int[2];
+        public int score { get; set; }
         public Direction curDirection { get; set; }
         public Boolean gameOver { get; set; } = false;
         int[] checkPos { get; set; }
