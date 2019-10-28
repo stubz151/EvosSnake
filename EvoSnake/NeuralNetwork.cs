@@ -9,8 +9,8 @@ namespace EvoSnake
 {
     public class NeuralNetwork
     {
-        public double[] vij { get; set; }   //weights from inut variables into hidden layer
-        public double[] wij { get; set; }   //weights from hidden layer into output layer
+        public double[,] vij { get; set; }   //weights from inut variables into hidden layer
+        public double[,] wij { get; set; }   //weights from hidden layer into output layer
         public double[] ok { get; set; }    //output neurons for snake direction
         public double[] zi { get; set; }   //multidimensional array of inp  
         public double[] inputPattern = new double[6];  //value of input pattern
@@ -31,40 +31,44 @@ namespace EvoSnake
         public void makeNN()
         {
             //initialising weights array betwen input and hidden
-            for (int i = 0; i < vij.Length; i++)
+            //initialising weights array betwen input and hidden
+            for (int i = 0; i < vij.GetUpperBound(0) + 1; i++)
             {
-                
-                    vij[i] = Rgen.NextDouble() * 1;
-                
+                for (int j = 0; j < vij.GetUpperBound(1) + 1; j++)
+                {
+                    vij[i, j] = Rgen.NextDouble() * 4;
+                }
             }
             //initilse weights between hidden and output
-            for (int i = 0; i < wij.Length; i++)
+            for(int i = 0; i < wij.GetUpperBound(0) + 1; i++)
             {
-               
-                    wij[i] = Rgen.NextDouble() * 1;
-                
+                for (int j = 0; j < wij.GetUpperBound(1) + 1; j++)
+                {
+                    wij[i, j] = Rgen.NextDouble() * 4;
+                }
             }
             //initialing hidden layer neurons
-            
-           
+
+
 
         }
 
         //getting weights from GA, making them equal to arrays in NN class in order to use them
-        public void updateWeightsArrays(double[] arr1, double[] arr2)
+        public void updateWieghtsArrays(double[,] arr1, double[,] arr2)
         {
-            for (int i = 0; i < vij.Length; i++)
+            for (int i = 0; i < arr1.GetUpperBound(0); i++)
             {
-
-                vij[i] = arr1[i];
-
+                for (int j = 0; j < arr1.GetUpperBound(1); j++)
+                {
+                    vij[i, j] = arr1[i, j];
+                }
             }
-            //initilse weights between hidden and output
-            for (int i = 0; i < wij.Length; i++)
+            for (int i = 0; i < arr2.GetUpperBound(0); i++)
             {
-
-                wij[i] = arr2[i];
-
+                for (int j = 0; j < arr2.GetUpperBound(1); j++)
+                {
+                    wij[i, j] = arr2[i, j];
+                }
             }
         }
         public void setInputs(double[] arrInputs)      //arrInputs is the inputs array from for the genetic algorithm, called each generation of learning
