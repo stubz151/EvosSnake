@@ -56,24 +56,21 @@ namespace EvoSnake
             sTest.DisplayBoard();
             Console.ReadLine();
             */         
-            SnakeGame snakeyBoi = new SnakeGame(20, 20);
+            SnakeGame snakeyBoi = new SnakeGame(10, 10);
+            snakeyBoi.curDirection = Direction.Right;
             GAClass ga = new GAClass(snakeyBoi);
-            NeuralNetwork bestnn = ga.bestNN();
+            NeuralNetwork bestnn = ga.population[5];
+            //NeuralNetwork bestnn = ga.bestNN();
             Stopwatch timer = new Stopwatch();        
             Console.Clear();
             while (snakeyBoi.gameOver == false)
             {
-                snakeyBoi.curDirection = Direction.Right;
-                moves move = bestnn.calculateDirection(snakeyBoi.outputBox());
-
-                snakeyBoi.moveHead(move);
                
-                snakeyBoi.DisplayBoard();
-                
+                moves move = bestnn.calculateDirection(snakeyBoi.getInputs());
+                snakeyBoi.moveHead(move);              
+                snakeyBoi.DisplayBoard();               
                 System.Threading.Thread.Sleep(100);
             
-              
-                
             }
             snakeyBoi.DisplayBoard();
             Console.WriteLine("Game OVER!!");

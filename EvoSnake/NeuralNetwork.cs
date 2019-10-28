@@ -36,7 +36,7 @@ namespace EvoSnake
             {
                 for (int j = 0; j < vij.GetUpperBound(1) + 1; j++)
                 {
-                    vij[i, j] = Rgen.NextDouble() * 1.00;
+                    vij[i, j] = Rgen.NextDouble() * 4.00;
                 }
             }
             //initilse weights between hidden and output
@@ -44,7 +44,7 @@ namespace EvoSnake
             {
                 for (int j = 0; j < wij.GetUpperBound(1) + 1; j++)
                 {
-                    wij[i, j] = Rgen.NextDouble() * 1.00;
+                    wij[i, j] = Rgen.NextDouble() * 4.00;
                 }
             }
             //initialing hidden layer neurons
@@ -54,7 +54,7 @@ namespace EvoSnake
         }
 
         //getting weights from GA, making them equal to arrays in NN class in order to use them
-        public void updateWieghtsArrays(double[,] arr1, double[,] arr2)
+        public void updateWeightsArrays(double[,] arr1, double[,] arr2)
         {
             for (int i = 0; i < arr1.GetUpperBound(0); i++)
             {
@@ -114,7 +114,7 @@ namespace EvoSnake
             //{
             //    ok[i] = resultOfInputLayer + wij[i]* resultOfInputLayer;
             //}
-            double bestValue = -double.MaxValue;
+            double bestValue = 0.00;
             int bestMove = -1;
             for (int i = 0; i < ok.Length; i++)
             {

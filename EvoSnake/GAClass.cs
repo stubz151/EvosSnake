@@ -22,7 +22,7 @@ namespace EvoSnake
         int popSize = 100;
         int iterations = 1000;
         double crossOverRate = 0.5;
-        double mutationChance = 0.2;
+        double mutationChance = 0.3;
         double mutationMag =0.5;
         int inputLayerSize = 6;
         int hiddenLayerSize = 4;
@@ -64,8 +64,8 @@ namespace EvoSnake
                         int nextnum = Rgen.Next(population.Count);
                         NeuralNetwork curNN = population[i];
 
-                        //  int curResult = playGameGetScore(curNN);
-                        int curResult = getResult(curNN.calculateDirection(temp.getInputs()), new SnakeGame((SnakeGame)snake.Clone()));
+                        //int curResult = playGameGetScore(curNN);
+                        int curResult = getResult(curNN, new SnakeGame((SnakeGame)temp.Clone()));
                         if (curResult > bestResult1)
                         {
                             bestResult1 = curResult;
@@ -78,7 +78,7 @@ namespace EvoSnake
                         NeuralNetwork curNN = population[i];
 
                         //int curResult = playGameGetScore(curNN);
-                        int curResult = getResult(curNN.calculateDirection(temp.getInputs()), new SnakeGame((SnakeGame)snake.Clone()));
+                        int curResult = getResult(curNN, new SnakeGame((SnakeGame)temp.Clone()));
                         if (curResult > bestResult2)
                         {
                             bestResult2 = curResult;
@@ -89,6 +89,7 @@ namespace EvoSnake
                     NeuralNetwork crossedNN = crossGen(bestNN1, bestNN2);
                     crossedNN = Mutate(crossedNN);
                     newPop.Add(crossedNN);
+
                 }
                // int nextnum2 = Rgen.Next(newPop.Count);
                 //temp.MakeMove(newPop[nextnum2].calculateDirection(temp.outputBox()));
@@ -106,8 +107,7 @@ namespace EvoSnake
         {
             SnakeGame temp = new SnakeGame((SnakeGame)snake.Clone());            
             while (temp.gameOver == false)
-            {
-              
+            {              
                 temp.moveHead(nn.calculateDirection(temp.getInputs()));
             }
             return temp.score;
@@ -176,6 +176,7 @@ namespace EvoSnake
             NeuralNetwork nn = new NeuralNetwork();
             nn.vij = inArr;
             nn.wij = hidArr;
+            nn.updateWeightsArrays(inArr, hidArr);
             return nn;
         }
 
@@ -206,28 +207,39 @@ namespace EvoSnake
                 }
             }
             nn1.wij = arr2;
+            nn1.updateWeightsArrays(arr1, arr2);
             return nn1;
         }
-            public int getResult(moves move, SnakeGame temp)
-            {
-            int distanceBefore = temp.distanceToFood();
-            temp.moveHead(move);
+        public int getResult(NeuralNetwork nn, SnakeGame temp)
+        {
             int result = 0;
-            if (temp.gameOver == true)
+            int runs = 0;
+            while (temp.gameOver == false)
             {
-                return result;
-            }
-            else
-            {
-                result++;
-                if (temp.distanceToFood() < distanceBefore)
+                if (runs>5)
+                {
+                    return result;
+                }
+                runs++;
+                int distanceBefore = temp.distanceToFood();
+                temp.moveHead(nn.calculateDirection(temp.getInputs()));
+               
+                if (temp.gameOver == true)
+                {
+                    return result;
+                }
+                else
                 {
                     result++;
-                }
+                    if (temp.distanceToFood() < distanceBefore)
+                    {
+                        result= result+5;
+                    }
 
+                }
+               
             }
             return result;
-            }
-          
+        }
     }
 }

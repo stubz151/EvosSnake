@@ -52,12 +52,13 @@ namespace EvoSnake
             genSnake();
             genNextFood();
         }
-        public SnakeGame(int s, int gridW, int gridH, Box[,] b, int[] fl, List<int[]> sb )
+        public SnakeGame(int s, int gridW, int gridH, Box[,] b, int[] fl, List<int[]> sb , Direction tempDirection)
         {
             score = s;
             gridWidth = gridW;
             gridHeight = gridH;
             snakeBody = sb;
+            curDirection = tempDirection;
             board = b;
             foodLocation = fl;
             updateBoard();
@@ -93,7 +94,7 @@ namespace EvoSnake
             temp.moveHead(move);
             if (temp.distanceToFood() < distanceBefore)
             {
-                return 1.00;
+                return 5.00;
             }
             return 0;                    
         }
@@ -362,7 +363,7 @@ namespace EvoSnake
             pos[1] = x;
             snakeBody.Add(pos);
 
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 2; i++)
             {
                 int[] pos2 = new int[2];
                 y--;
@@ -558,10 +559,13 @@ namespace EvoSnake
             List<int[]> sb = snakeBody;
             List<int[]> newList = new List<int[]>(snakeBody.Count);
             foreach (int[] item in snakeBody)
+            {
                 newList.Add((int[])item.Clone());
-            
+            }
+             
+            Direction tempDirection = curDirection;
         
-            return new SnakeGame(Tempscore, tempWidth, tempHeight, tempBoard, foodpos, newList);
+            return new SnakeGame(Tempscore, tempWidth, tempHeight, tempBoard, foodpos, newList, tempDirection);
         }
         
     }
