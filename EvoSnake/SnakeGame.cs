@@ -12,6 +12,10 @@ namespace EvoSnake
     {
         Up,Down,Left,Right
     }
+    public enum moves
+    {
+        Forward,Left,Right
+    }
    public enum Box
     {
         Empty = 0,
@@ -65,7 +69,12 @@ namespace EvoSnake
             foodLocation = (int[])sg.foodLocation.Clone();
             updateBoard();
         }
-      
+        public void moveHead()
+        {
+
+        }
+       
+
         public void buildGrid()
         {
             for (int i = 0; i < gridHeight; i++)

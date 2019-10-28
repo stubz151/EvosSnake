@@ -66,17 +66,39 @@ namespace EvoSnake
             NeuralNetwork bestnn = ga.bestNN();
             Stopwatch timer = new Stopwatch();
             Console.WriteLine(ga.population.Count);
+            /*
+            Console.WriteLine(bestnn.vij[0]);
+            Console.WriteLine(bestnn.vij[1]);
+            Console.WriteLine(bestnn.vij[2]);
+            Console.WriteLine(bestnn.vij[3]);
+            Console.WriteLine(bestnn.wij[0]);
+            Console.WriteLine(bestnn.wij[1]);
+            Console.WriteLine(bestnn.wij[2]);
+            Console.WriteLine(bestnn.wij[3]);
+            Console.WriteLine(bestnn.wij[4]);
+            Console.WriteLine(bestnn.wij[5]);
+            */
             Console.ReadLine();
+            Console.Clear();
             while (snakeyBoi.gameOver == false)
             {
-                snakeyBoi.MakeMove(bestnn.calculateDirection(snakeyBoi.outputBox()));
+                snakeyBoi.curDirection = Direction.Right;
+                Direction move = bestnn.calculateDirection(snakeyBoi.outputBox());
+
+                snakeyBoi.MakeMove(move);
                 snakeyBoi.DisplayBoard();
+                
+                System.Threading.Thread.Sleep(2000);
+                /*
                 timer.Start();
-                while (timer.Elapsed.TotalMilliseconds < 100)
+                while (timer.Elapsed.TotalMilliseconds < 1000)
                 {
+                    ;
                 }
                 timer.Stop();
+                */
             }
+            snakeyBoi.DisplayBoard();
             Console.WriteLine("Game OVER!!");
             Console.ReadLine();
 

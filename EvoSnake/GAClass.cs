@@ -14,15 +14,15 @@ namespace EvoSnake
         //4 possible moves with different double values, will pick the highest one from the nn
         double[] moveResult = new double[4];
       
-        Direction move;
+      
         Random Rgen = new Random();
         //the distance between the snake and food pre-move.
-        double distanceToFoodBefore;
-        int popSize = 100;
-        int iterations = 1000;
+       
+        int popSize = 1000;
+        int iterations = 50;
         double crossOverRate = 0.5;
         double mutationChance = 0.4;
-        double mutationMag = 2.0;
+        double mutationMag = 0.05;
         int inputLayerSize = 6;
         int hiddenLayerSize = 4;
 
@@ -46,10 +46,11 @@ namespace EvoSnake
             int t = 0;
             SnakeGame temp = new SnakeGame((SnakeGame)snake.Clone());
             while (t< iterations) {
+                Console.WriteLine("Iteration:" + t);
                 List<NeuralNetwork> newPop = new List<NeuralNetwork>();               
                 while (newPop.Count< population.Count)
                 {             
-                   if (temp.gameOver==true)
+                    if (temp.gameOver==true)
                     {
                         temp = new SnakeGame((SnakeGame)snake.Clone());
                     }
@@ -57,24 +58,24 @@ namespace EvoSnake
                     NeuralNetwork bestNN2 = new NeuralNetwork();
                     int bestResult1 = -1;
                     int bestResult2 = -1;
-                    for (int i = 0; i < 20; i++)
+                    for (int i = 0; i < 10; i++)
                     {
                         int nextnum = Rgen.Next(population.Count);
                         NeuralNetwork curNN = population[i];
-                        
-                        int curResult = getResult(curNN.calculateDirection(temp.outputBox()), new SnakeGame((SnakeGame)temp.Clone()));
+
+                        int curResult = playGameGetScore(curNN);
                         if (curResult > bestResult1)
                         {
                             bestResult1 = curResult;
                             bestNN1 = curNN;
                         }
                     }
-                    for (int i = 0; i < 20; i++)
+                    for (int i = 0; i < 10; i++)
                     {
                         int nextnum = Rgen.Next(population.Count);
                         NeuralNetwork curNN = population[i];
 
-                        int curResult = getResult(curNN.calculateDirection(temp.outputBox()), new SnakeGame((SnakeGame)temp.Clone()));
+                        int curResult = playGameGetScore(curNN);
                         if (curResult > bestResult2)
                         {
                             bestResult2 = curResult;
@@ -85,16 +86,30 @@ namespace EvoSnake
                     crossedNN = Mutate(crossedNN);
                     newPop.Add(crossedNN);
                 }
-                int nextnum2 = Rgen.Next(newPop.Count);
-                temp.MakeMove(newPop[nextnum2].calculateDirection(temp.outputBox()));               
-                population = newPop;
+               // int nextnum2 = Rgen.Next(newPop.Count);
+                //temp.MakeMove(newPop[nextnum2].calculateDirection(temp.outputBox()));
+                List<NeuralNetwork> newList = new List<NeuralNetwork>(newPop.Count);
+                foreach (NeuralNetwork item in newPop)
+                {
+                    newList.Add(item);
+                }                     
+                population = newList;
                 t++;
             }
         }
+        public int playGameGetScore(NeuralNetwork nn)
+        {
+            SnakeGame temp = new SnakeGame((SnakeGame)snake.Clone());            
+            while (temp.gameOver == false)
+            {
+                temp.MakeMove(nn.calculateDirection(temp.outputBox()));
+            }
+            return temp.score;
+        }
         public NeuralNetwork bestNN()
         {
-            int bestScore = 0;
-            NeuralNetwork bestNN = population[0];
+            int bestScore = -1;
+            NeuralNetwork bestNN = null;
             for (int i =0; i< population.Count;i++)
             {
                 SnakeGame temp = new SnakeGame((SnakeGame)snake.Clone());
@@ -173,7 +188,7 @@ namespace EvoSnake
             return nn1;
         }
             public int getResult(Direction move, SnakeGame temp)
-        {
+            {
             int distanceBefore = temp.distanceToFood();          
             temp.MakeMove(move);
             int result = 0;
@@ -191,6 +206,6 @@ namespace EvoSnake
 
             }
             return result;
-        }
+            }
     }
 }
