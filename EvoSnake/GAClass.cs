@@ -19,11 +19,11 @@ namespace EvoSnake
         Random Rgen = new Random();
         //the distance between the snake and food pre-move.
        
-        int popSize = 100;
-        int iterations = 1000;
+        int popSize = 1000;
+        int iterations = 10000;
         double crossOverRate = 0.5;
         double mutationChance = 0.3;
-        double mutationMag =0.5;
+        double mutationMag =5.0;
         int inputLayerSize = 6;
         int hiddenLayerSize = 4;
 

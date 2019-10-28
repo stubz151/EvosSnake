@@ -27,9 +27,9 @@ namespace EvoSnake
     class SnakeGame :ICloneable
     {
         public int[] foodLocation { get; set; } = new int[2];
-        int[] posForward { get; set; } = new int[2];
-        int[] posLeft { get; set; } = new int[2];
-        int[] posRight { get; set; } = new int[2];
+        public int[] posForward { get; set; } = new int[2];
+        public int[] posLeft { get; set; } = new int[2];
+        public int[] posRight { get; set; } = new int[2];
         public int score { get; set; }
         public Direction curDirection { get; set; }
         public Boolean gameOver { get; set; } = false;
@@ -89,13 +89,24 @@ namespace EvoSnake
         public double resultOfMove(moves move)
         {         
             int distanceBefore = distanceToFood();
+            int scoreBefore = score;
             moves closestMove = moves.Forward;           
             SnakeGame temp = (SnakeGame)this.Clone();
             temp.moveHead(move);
-            if (temp.distanceToFood() < distanceBefore)
+            int scoreAfter = temp.score;
+            if (temp.gameOver==true)
+            {
+                return -1.00;
+            }
+            if (scoreAfter> scoreBefore)
             {
                 return 5.00;
             }
+            if (temp.distanceToFood() < distanceBefore)
+            {
+                return 1.00;
+            }
+            
             return 0;                    
         }
 
@@ -363,7 +374,7 @@ namespace EvoSnake
             pos[1] = x;
             snakeBody.Add(pos);
 
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 4; i++)
             {
                 int[] pos2 = new int[2];
                 y--;
