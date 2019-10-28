@@ -141,19 +141,19 @@ namespace EvoSnake
         }
         */
         //This method returns the area around the head,
-        public int[] outputBox()
+        public double[] outputBox()
         {
-            int[] outBox = new int[6];
+            double[] outBox = new double[6];
             int[] headPos = snakeBody[0];
             headPosY = headPos[0];
             headPosX = headPos[1];
             //inputs
-            int eleUp = (int)board[headPosY--, headPosX];
-            int eleDown = (int)board[headPosY++, headPosX];
-            int eleLeft = (int)board[headPosY, headPosX--];
-            int eleRight = (int)board[headPosY, headPosX++];
-            int distX = distanceToFoodX();
-            int distY = distanceToFoodY();
+            double eleUp = (double)board[headPosY--, headPosX];
+            double eleDown = (double)board[headPosY++, headPosX];
+            double eleLeft = (double)board[headPosY, headPosX--];
+            double eleRight = (double)board[headPosY, headPosX++];
+            double distX = distanceToFoodX();
+            double distY = distanceToFoodY();
 
             outBox[0] = eleUp;
             outBox[1] = eleDown;

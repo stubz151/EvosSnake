@@ -14,7 +14,7 @@ namespace EvoSnake
 
             ConsoleKey input;
             SnakeGame sTest = new SnakeGame(20, 20);
-
+            
             SnakeGame snakeyBoi = new SnakeGame((SnakeGame)sTest.Clone());
             //snakeyBoi = (SnakeGame)sTest.Clone();
             snakeyBoi.DisplayBoard();

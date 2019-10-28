@@ -7,19 +7,23 @@ using System.IO;
 
 namespace EvoSnake
 {
-    class NeuralNetwork
+    public class NeuralNetwork
     {
-        double[] vij { get; set; } = new double[6] ;  //weights from inut variables into hidden layer
-        double[] wij { get; set; } = new double[4];  //weights from hidden layer into output layer
-        double[] ok { get; set; } = new double[4];    //output neurons for snake direction
-        double[] zi { get; set; } = new double[6];   //multidimensional array of inp  
-        double[] inputPattern = new double[6];  //value of input pattern
+        public double[] vij { get; set; }   //weights from inut variables into hidden layer
+        public double[] wij { get; set; }   //weights from hidden layer into output layer
+        public double[] ok { get; set; }    //output neurons for snake direction
+        public double[] zi { get; set; }   //multidimensional array of inp  
+        public double[] inputPattern = new double[6];  //value of input pattern
         double[] yi { get; set; }
         Random Rgen = new Random();
         SnakeGame snakeyBoi;
 
         public NeuralNetwork()
         {
+            vij = new double[6];
+            wij = new double[4];
+            ok = new double[4];
+            zi = new double[6];
             makeNN();
            // snakeyBoi = new SnakeGame(20, 20);  //initialing the size of the board in the neural network class
         }
@@ -79,8 +83,9 @@ namespace EvoSnake
                     zi[i] = arrInputs[i];               
             }
         }
-        public Direction calculateDirection()
+        public Direction calculateDirection(double[] arrInputs)
         {
+            setInputs(arrInputs);
             double resultOfInputLayer=0;
             for (int i = 0; i < vij.Length; i++)
             {
