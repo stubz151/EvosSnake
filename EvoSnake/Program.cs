@@ -56,7 +56,7 @@ namespace EvoSnake
             sTest.DisplayBoard();
             Console.ReadLine();
             */         
-            SnakeGame snakeyBoi = new SnakeGame(10, 20);
+            SnakeGame snakeyBoi = new SnakeGame(20, 20);
             GAClass ga = new GAClass(snakeyBoi);
             NeuralNetwork bestnn = ga.bestNN();
             Stopwatch timer = new Stopwatch();        
@@ -67,6 +67,7 @@ namespace EvoSnake
                 moves move = bestnn.calculateDirection(snakeyBoi.outputBox());
 
                 snakeyBoi.moveHead(move);
+               
                 snakeyBoi.DisplayBoard();
                 
                 System.Threading.Thread.Sleep(100);

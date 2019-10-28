@@ -19,11 +19,11 @@ namespace EvoSnake
         Random Rgen = new Random();
         //the distance between the snake and food pre-move.
        
-        int popSize = 1000;
-        int iterations = 50;
+        int popSize = 100;
+        int iterations = 1000;
         double crossOverRate = 0.5;
         double mutationChance = 0.2;
-        double mutationMag = 0.05;
+        double mutationMag =0.5;
         int inputLayerSize = 6;
         int hiddenLayerSize = 4;
 
@@ -64,7 +64,8 @@ namespace EvoSnake
                         int nextnum = Rgen.Next(population.Count);
                         NeuralNetwork curNN = population[i];
 
-                        int curResult = playGameGetScore(curNN);
+                        //  int curResult = playGameGetScore(curNN);
+                        int curResult = getResult(curNN.calculateDirection(temp.getInputs()), new SnakeGame((SnakeGame)snake.Clone()));
                         if (curResult > bestResult1)
                         {
                             bestResult1 = curResult;
@@ -76,13 +77,15 @@ namespace EvoSnake
                         int nextnum = Rgen.Next(population.Count);
                         NeuralNetwork curNN = population[i];
 
-                        int curResult = playGameGetScore(curNN);
+                        //int curResult = playGameGetScore(curNN);
+                        int curResult = getResult(curNN.calculateDirection(temp.getInputs()), new SnakeGame((SnakeGame)snake.Clone()));
                         if (curResult > bestResult2)
                         {
                             bestResult2 = curResult;
                             bestNN2 = curNN;
                         }
                     }
+                   
                     NeuralNetwork crossedNN = crossGen(bestNN1, bestNN2);
                     crossedNN = Mutate(crossedNN);
                     newPop.Add(crossedNN);
@@ -95,6 +98,7 @@ namespace EvoSnake
                     newList.Add(item);
                 }                     
                 population = newList;
+                temp.moveHead(population[0].calculateDirection(temp.getInputs()));
                 t++;
             }
         }
@@ -103,6 +107,7 @@ namespace EvoSnake
             SnakeGame temp = new SnakeGame((SnakeGame)snake.Clone());            
             while (temp.gameOver == false)
             {
+              
                 temp.moveHead(nn.calculateDirection(temp.getInputs()));
             }
             return temp.score;
@@ -203,14 +208,14 @@ namespace EvoSnake
             nn1.wij = arr2;
             return nn1;
         }
-            public int getResult(Direction move, SnakeGame temp)
+            public int getResult(moves move, SnakeGame temp)
             {
-            int distanceBefore = temp.distanceToFood();          
-            temp.MakeMove(move);
+            int distanceBefore = temp.distanceToFood();
+            temp.moveHead(move);
             int result = 0;
             if (temp.gameOver == true)
             {
-                
+                return result;
             }
             else
             {

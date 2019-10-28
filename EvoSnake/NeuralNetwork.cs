@@ -36,7 +36,7 @@ namespace EvoSnake
             {
                 for (int j = 0; j < vij.GetUpperBound(1) + 1; j++)
                 {
-                    vij[i, j] = Rgen.NextDouble() * 4;
+                    vij[i, j] = Rgen.NextDouble() * 1.00;
                 }
             }
             //initilse weights between hidden and output
@@ -44,7 +44,7 @@ namespace EvoSnake
             {
                 for (int j = 0; j < wij.GetUpperBound(1) + 1; j++)
                 {
-                    wij[i, j] = Rgen.NextDouble() * 4;
+                    wij[i, j] = Rgen.NextDouble() * 1.00;
                 }
             }
             //initialing hidden layer neurons
@@ -114,10 +114,11 @@ namespace EvoSnake
             //{
             //    ok[i] = resultOfInputLayer + wij[i]* resultOfInputLayer;
             //}
-            double bestValue = -100;
+            double bestValue = -double.MaxValue;
             int bestMove = -1;
             for (int i = 0; i < ok.Length; i++)
             {
+                
                 if (ok[i] > bestValue)
                 {
                     bestValue = ok[i];
